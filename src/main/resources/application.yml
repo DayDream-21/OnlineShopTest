@@ -1,1 +1,15 @@
-
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  security:
+    user:
+      name: user
+      password: user
+server:
+  servlet:
+    context-path: /shop
