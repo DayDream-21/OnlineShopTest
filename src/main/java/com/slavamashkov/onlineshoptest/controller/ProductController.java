@@ -1,6 +1,7 @@
 package com.slavamashkov.onlineshoptest.controller;
 
 import com.slavamashkov.onlineshoptest.entity.Product;
+import com.slavamashkov.onlineshoptest.entity.Purchase;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.UserService;
@@ -9,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +37,14 @@ public class ProductController {
         if (user.getBalance() >= product.getPrice() && product.getQuantity() > 0) {
             product.setQuantity(product.getQuantity() - 1);
             user.setBalance(user.getBalance() - product.getPrice());
+
+            Purchase purchase = new Purchase();
+
+            purchase.setUser(user);
+            purchase.setProduct(product);
+            purchase.setPurchaseTime(LocalDateTime.now());
+
+            user.getPurchaseHistory().add(purchase);
 
             userService.save(user);
             productService.saveProduct(product);

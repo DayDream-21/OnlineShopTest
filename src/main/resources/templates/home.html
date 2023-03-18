@@ -7,10 +7,15 @@
   <title>Онлайн магазин</title>
 </head>
 <body>
-<form sec:authorize="isAuthenticated()" class="nav-item" th:action="@{/logout}" method="POST">
+<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
+  <div>
+    <button type="submit">Purchase history</button>
+    <span th:text="Balance + ': ' + ${balance} + ' &#8381'"></span>
+  </div>
+</form>
+<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
   <div>
     <button type="submit">Log out</button>
-    <span th:text="Balance + ${balance}"></span>
   </div>
   <h3>Products</h3>
   <table>
