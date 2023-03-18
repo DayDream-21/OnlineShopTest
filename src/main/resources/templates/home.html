@@ -10,6 +10,7 @@
 <form sec:authorize="isAuthenticated()" class="nav-item" th:action="@{/logout}" method="POST">
   <div>
     <button type="submit">Log out</button>
+    <span th:text="Balance + ${balance}"></span>
   </div>
   <h3>Products</h3>
   <table>
@@ -17,6 +18,7 @@
     <tr>
       <th>name</th>
       <th>price</th>
+      <th>quantity</th>
       <th>action</th>
     </tr>
     </thead>
@@ -25,13 +27,14 @@
     <tr th:each="product : ${products}">
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
+      <td th:text="${product.quantity}"></td>
 
       <td>
         <div sec:authorize="hasRole('USER') or hasRole('ADMIN')">
-          <a th:href="@{'/product/' + ${product.id}}" th:text="Info"></a>
+          <a th:href="@{'/product/info/' + ${product.id}}" th:text="Info"></a>
         </div>
         <div sec:authorize="hasRole('USER') and !hasRole('ADMIN')">
-          Add to cart
+          <a th:href="@{'/product/buy/' + ${product.id}}" th:text="Buy"></a>
         </div>
       </td>
     </tr>

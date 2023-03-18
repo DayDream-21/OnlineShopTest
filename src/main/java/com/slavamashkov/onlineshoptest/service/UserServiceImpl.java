@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -33,17 +31,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User userDto) {
-        Role role = roleRepository.findByName("ROLE_USER");
+        User user = userRepository.getUserByEmail(userDto.getEmail());
 
-        User user = User.builder()
-                .username(userDto.getUsername())
-                .email(userDto.getEmail())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .balance(0.0)
-                .enabled(true)
-                .roles(Set.of(role))
-                .build();
+        if (user != null) {
+            userRepository.save(user);
+        } else {
+            Role role = roleRepository.findByName("ROLE_USER");
 
-        userRepository.save(user);
+            user = User.builder()
+                    .username(userDto.getUsername())
+                    .email(userDto.getEmail())
+                    .password(passwordEncoder.encode(userDto.getPassword()))
+                    .balance(0.0)
+                    .enabled(true)
+                    .roles(Set.of(role))
+                    .build();
+
+            userRepository.save(user);
+        }
     }
 }
