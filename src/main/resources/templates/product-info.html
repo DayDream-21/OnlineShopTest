@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <form th:object="${product}" method="get">
+    <span th:text="${product.name}"/>
+    <span th:text="${product.price}"/>
+    <span th:text="${product.description}"/>
+    <span th:text="${product.quantity}"/>
+  </form>
+</body>
+</html>

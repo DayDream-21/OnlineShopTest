@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Шапка</title>
+</head>
+<body>
+<div class="header">
+  <div class="user-info">
+    <span th:text="${currentUser.name}"></span>
+    <span th:text="${currentUser.balance}"></span>
+  </div>
+  <div class="buttons">
+    <button onclick="">Выйти</button>
+    <button onclick="">История покупок</button>
+  </div>
+</div>
+</body>
+</html>

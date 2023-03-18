@@ -1,10 +1,7 @@
 package com.slavamashkov.onlineshoptest.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.*;
 
@@ -12,6 +9,8 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "users", schema = "online_shop_schema")
 public class User {
@@ -20,9 +19,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
-    private boolean enabled;
+    @Column(nullable = false) private String username;
+    @Column(nullable = false, unique = true) private String email;
+    @Column(nullable = false) private String password;
+    @Column(nullable = false) private Double balance;
+    @Column(nullable = false) private boolean enabled;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(

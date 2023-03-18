@@ -1,15 +1,11 @@
 package com.slavamashkov.onlineshoptest.config;
 
-import com.slavamashkov.onlineshoptest.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,13 +33,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/").hasAnyAuthority("USER", "ADMIN")
-                .requestMatchers("/new").hasAnyAuthority("ADMIN")
-                .requestMatchers("/edit/**").hasAnyAuthority("ADMIN")
-                .requestMatchers("/delete/**").hasAnyAuthority("ADMIN")
+                .requestMatchers("/login", "/register").permitAll()
+                .requestMatchers("/").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/product/add").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
-        ).formLogin(AbstractAuthenticationFilterConfigurer::permitAll
-        ).logout(LogoutConfigurer::permitAll
+        ).formLogin(form -> form
+                .loginPage("/login")
+                .permitAll()
+        ).logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
         ).exceptionHandling().accessDeniedPage("/403");
 
         return httpSecurity.build();

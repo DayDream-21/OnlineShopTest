@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
-  <head>
-    <title>Spring Security Example</title>
-  </head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Онлайн магазин</title>
+</head>
+<body>
+<form sec:authorize="isAuthenticated()" class="nav-item" th:action="@{/logout}" method="POST">
+  <div>
+    <button type="submit">Log out</button>
+  </div>
+  <h3>Products</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>name</th>
+      <th>price</th>
+      <th>action</th>
+    </tr>
+    </thead>
 
-  <body>
-    <h1>Welcome!</h1>
-  </body>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+
+      <td>
+        <div sec:authorize="hasRole('USER') or hasRole('ADMIN')">
+          <a th:href="@{'/product/' + ${product.id}}" th:text="Info"></a>
+        </div>
+        <div sec:authorize="hasRole('USER') and !hasRole('ADMIN')">
+          Add to cart
+        </div>
+      </td>
+    </tr>
+    <tr sec:authorize="hasRole('ADMIN')">
+      <td>---</td>
+      <td>---</td>
+      <td>---</td>
+      <td>
+        <a th:href="@{'/product/add'}" th:text="Add"></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</form>
+</body>
 </html>
