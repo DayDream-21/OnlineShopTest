@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase history</title>
+</head>
+<body>
+<form>
+  <h3>Purchases</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>name</th>
+      <th>price</th>
+      <th>time</th>
+      <th>action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="purchase : ${purchases}">
+      <td th:text="${purchase.product.name}"></td>
+      <td th:text="${purchase.product.price}"></td>
+      <td th:text="${purchase.purchaseTime}"></td>
+
+      <td>
+        <!-- ВОЗВРАТ ТОВАРА ДЛЯ ПОЛЬЗОВАТЕЛЯ
+        <div sec:authorize="hasRole('USER') and !hasRole('ADMIN')">
+          <a th:href="@{'/product/return/' + ${product.id}}" th:text="Return"></a>
+        </div>-->
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</form>
+</body>
+</html>

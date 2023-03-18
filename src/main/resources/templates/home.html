@@ -4,13 +4,18 @@
       lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Онлайн магазин</title>
+  <title>Online shop</title>
 </head>
 <body>
-<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
+<form sec:authorize="hasRole('USER') and !hasRole('ADMIN')" th:action="@{/history}" method="GET">
   <div>
     <button type="submit">Purchase history</button>
     <span th:text="Balance + ': ' + ${balance} + ' &#8381'"></span>
+  </div>
+</form>
+<form sec:authorize="hasRole('ADMIN') and !hasRole('USER')" th:action="@{/users}" method="GET">
+  <div>
+    <button type="submit">List of users</button>
   </div>
 </form>
 <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">

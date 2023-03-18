@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+</head>
+<body>
+<form>
+  <h3>Users</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>username</th>
+      <th>email</th>
+      <th>balance</th>
+      <th>enabled</th>
+      <th>action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.username}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.balance}"></td>
+      <td th:text="${user.enabled}"></td>
+
+      <td>
+        <div sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{'/users/user/' + ${user.id} + '/edit'}" th:text="Edit"></a>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{'/users/user/' + ${user.id} + '/history'}" th:text="History"></a>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{'/users/user/' + ${user.id} + '/notification'}" th:text="Notification"></a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</form>
+</body>
+</html>

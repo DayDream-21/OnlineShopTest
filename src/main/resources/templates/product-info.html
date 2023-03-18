@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Product</title>
 </head>
 <body>
-  <form th:object="${product}" method="get">
+  <form th:object="${product}">
     <span th:text="${product.name}"/>
     <span th:text="${product.price}"/>
     <span th:text="${product.description}"/>

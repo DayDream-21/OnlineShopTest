@@ -31,7 +31,7 @@ public class ProductController {
 
     @GetMapping("/buy/{id}")
     public String buyProduct(@PathVariable(name = "id") Long id, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
+        User user = userService.getUserByUsername(authentication.getName());
         Product product = productService.getProductById(id);
 
         if (user.getBalance() >= product.getPrice() && product.getQuantity() > 0) {

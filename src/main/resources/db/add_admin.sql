@@ -6,5 +6,4 @@ VALUES
 
 INSERT INTO users_roles (user_id, role_id)
 VALUES
-    (4, 1),
-    (4, 2);
+    (2, 2);

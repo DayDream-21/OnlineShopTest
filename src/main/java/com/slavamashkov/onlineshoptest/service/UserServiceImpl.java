@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     @Override
-    public User findByUsername(String username) {
+    public User getUserByUsername(String username) {
         User user = userRepository.getUserByUsername(username);
 
         if (user != null) {
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new UsernameNotFoundException("Could not find user");
         }
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
@@ -49,5 +55,10 @@ public class UserServiceImpl implements UserService {
 
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).get();
     }
 }

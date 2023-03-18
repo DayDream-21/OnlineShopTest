@@ -35,6 +35,8 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/login", "/register").permitAll()
                 .requestMatchers("/").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/history").hasAnyRole("USER")
+                .requestMatchers("/users/**").hasAnyRole("ADMIN")
                 .requestMatchers("/product/add").hasAnyRole("ADMIN")
                 .requestMatchers("/product/info/*").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/product/buy/*").hasAnyRole("USER")
