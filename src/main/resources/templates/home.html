@@ -30,6 +30,10 @@
             <button type="submit" class="btn btn-link">Purchase history</button>
             <span th:text="Balance + ': ' + ${balance} + ' &#8381'"></span>
           </form>
+          <form class="nav-link" sec:authorize="hasRole('USER') or hasRole('ADMIN')" th:action="@{/product/rate}"
+                method="GET">
+            <button type="submit" class="btn btn-link">Rate products</button>
+          </form>
         </li>
         <li class="nav-item">
           <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"

@@ -1,8 +1,8 @@
 package com.slavamashkov.onlineshoptest.controller;
 
-import com.slavamashkov.onlineshoptest.entity.Product;
-import com.slavamashkov.onlineshoptest.entity.Purchase;
-import com.slavamashkov.onlineshoptest.entity.User;
+import com.slavamashkov.onlineshoptest.entity.*;
+import com.slavamashkov.onlineshoptest.repository.RatingRepository;
+import com.slavamashkov.onlineshoptest.repository.ReviewRepository;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.PurchaseService;
 import com.slavamashkov.onlineshoptest.service.UserService;
@@ -12,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/product")
@@ -19,6 +22,8 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
     private final PurchaseService purchaseService;
+    private final RatingRepository ratingRepository;
+    private final ReviewRepository reviewRepository;
 
     @GetMapping("/info/{id}")
     public String openInfoProductPage(@PathVariable(name = "id") Long id, Model model) {
@@ -58,6 +63,63 @@ public class ProductController {
         model.addAttribute("product", emptyProduct);
 
         return "add-product";
+    }
+
+    @GetMapping("/rate")
+    public String openRateProductsPage(Model model, Authentication authentication) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Set<Product> products = user.getPurchaseHistory().stream().map(Purchase::getProduct).collect(Collectors.toSet());
+
+        model.addAttribute("products", products);
+
+        return "product-history";
+    }
+
+    @GetMapping("/rate/{id}")
+    public String openRateSingleProductPage(@PathVariable(name = "id") Long id, Model model, Authentication authentication) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Product product = productService.getProductById(id);
+
+        // Проверка на наличие продукта среди покупок пользователя
+        if (user.getPurchaseHistory().stream()
+                .map(Purchase::getProduct)
+                .noneMatch(p -> p.equals(product))) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("product", product);
+        model.addAttribute("rating", new Rating());
+        model.addAttribute("review", new Review());
+
+        return "rate-single-product";
+    }
+
+    @PostMapping("/rate/{id}")
+    public String rateProduct(
+            @PathVariable(name = "id") Long id,
+            @ModelAttribute(name = "rating") Rating rating,
+            @ModelAttribute(name = "review") Review review,
+            Authentication authentication
+    ) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Product product = productService.getProductById(id);
+        // Проверка на наличие продукта среди покупок пользователя
+        if (user.getPurchaseHistory().stream()
+                .map(Purchase::getProduct)
+                .noneMatch(p -> p.equals(product))) {
+            return "redirect:/";
+        }
+
+        rating.setUser(user);
+        review.setUser(user);
+
+        rating.setProduct(product);
+        review.setProduct(product);
+
+        ratingRepository.save(rating);
+        reviewRepository.save(review);
+
+        return "redirect:/";
     }
 
     @GetMapping("/update/{id}")

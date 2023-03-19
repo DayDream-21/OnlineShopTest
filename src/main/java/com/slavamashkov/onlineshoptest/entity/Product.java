@@ -3,6 +3,9 @@ package com.slavamashkov.onlineshoptest.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @ToString
@@ -21,6 +24,33 @@ public class Product {
     @Column(nullable = true) private String description;
     @Column(nullable = false) private Double price;
     @Column(nullable = false) private Integer quantity;
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_sale",
+            schema = "online_shop_schema",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "sale_id")
+    )
+    @ToString.Exclude
+    private Set<Sale> sales;
+
+    @OneToMany(mappedBy = "product")
+    @ToString.Exclude
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product")
+    @ToString.Exclude
+    private List<Rating> ratings;
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_tag",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @ToString.Exclude
+    private Set<Tag> tags;
 }
 
 

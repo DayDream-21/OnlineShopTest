@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/product/add").hasAnyRole("ADMIN")
                 .requestMatchers("/product/update/*").hasAnyRole("ADMIN")
                 .requestMatchers("/product/return/*").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/product/rate/*").hasAnyRole("USER", "ADMIN")
                 //.requestMatchers("/product/delete").hasAnyRole("ADMIN")
                 .requestMatchers("/product/info/*").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/product/buy/*").hasAnyRole("USER", "ADMIN")

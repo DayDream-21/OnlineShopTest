@@ -37,4 +37,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Purchase> purchaseHistory = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Rating> ratings;
 }
