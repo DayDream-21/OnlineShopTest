@@ -4,6 +4,7 @@ import com.slavamashkov.onlineshoptest.entity.Product;
 import com.slavamashkov.onlineshoptest.entity.Purchase;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.service.ProductService;
+import com.slavamashkov.onlineshoptest.service.PurchaseService;
 import com.slavamashkov.onlineshoptest.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,14 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
     private final UserService userService;
+    private final PurchaseService purchaseService;
 
     @GetMapping("/info/{id}")
     public String openInfoProductPage(@PathVariable(name = "id") Long id, Model model) {
@@ -34,23 +34,21 @@ public class ProductController {
         User user = userService.getUserByUsername(authentication.getName());
         Product product = productService.getProductById(id);
 
-        if (user.getBalance() >= product.getPrice() && product.getQuantity() > 0) {
-            product.setQuantity(product.getQuantity() - 1);
-            user.setBalance(user.getBalance() - product.getPrice());
+        productService.buyProduct(user, product);
 
-            Purchase purchase = new Purchase();
-
-            purchase.setUser(user);
-            purchase.setProduct(product);
-            purchase.setPurchaseTime(LocalDateTime.now());
-
-            user.getPurchaseHistory().add(purchase);
-
-            userService.save(user);
-            productService.saveProduct(product);
-        }
+        userService.save(user);
+        productService.saveProduct(product);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/return/{id}")
+    public String returnProduct(@PathVariable(name = "id") Long id) {
+        Purchase purchase = purchaseService.getPurchaseById(id);
+
+        purchaseService.abortPurchase(purchase);
+
+        return "redirect:/history";
     }
 
     @GetMapping("/add")
@@ -78,10 +76,10 @@ public class ProductController {
         return "redirect:/";
     }
 
-    @GetMapping("/delete")
+    /*@GetMapping("/delete/{id}")
     public String deleteProduct(@ModelAttribute(name = "product") Product product) {
         productService.deleteProduct(product);
 
         return "redirect:/";
-    }
+    }*/
 }

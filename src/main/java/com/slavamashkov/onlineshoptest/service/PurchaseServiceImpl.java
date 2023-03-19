@@ -1,21 +1,68 @@
 package com.slavamashkov.onlineshoptest.service;
 
+import com.slavamashkov.onlineshoptest.entity.Product;
 import com.slavamashkov.onlineshoptest.entity.Purchase;
 import com.slavamashkov.onlineshoptest.entity.User;
+import com.slavamashkov.onlineshoptest.repository.ProductRepository;
 import com.slavamashkov.onlineshoptest.repository.PurchaseRepository;
-import com.slavamashkov.onlineshoptest.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseRepository purchaseRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public Set<Purchase> getAllPurchasesByUser(User user) {
         return purchaseRepository.getAllByUser(user);
+    }
+
+    @Override
+    public Purchase getPurchaseById(Long id) {
+        return purchaseRepository.getPurchaseById(id);
+    }
+
+    @Override
+    @Transactional
+    public void abortPurchase(Purchase purchase) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime purchaseTime = purchase.getPurchaseTime();
+
+        if (Duration.between(purchaseTime, currentTime).toSeconds() > (long) (24 * 60 * 60)) {
+            return;
+        }
+
+        Optional<Product> optionalProduct = productRepository.findById(purchase.getProduct().getId());
+
+        if (optionalProduct.isPresent()) {
+            // Возвращаем продукт в базу если продукт с таким id уже находится там
+            Product product = optionalProduct.get();
+            product.setQuantity(product.getQuantity() + 1);
+            // Возвращаем пользователю деньги за покупку
+            User user = purchase.getUser();
+            user.setBalance(user.getBalance() + product.getPrice());
+            // Удаляем покупку из списка покупок пользователя
+            purchaseRepository.deletePurchaseById(purchase.getId());
+        } else {
+            Product newProduct = purchase.getProduct();
+
+            newProduct.setQuantity(1);
+
+            // Возвращаем пользователю деньги за покупку
+            User user = purchase.getUser();
+            user.setBalance(user.getBalance() + newProduct.getPrice());
+            // Удаляем покупку из списка покупок пользователя
+            purchaseRepository.deletePurchaseById(purchase.getId());
+
+            productRepository.save(newProduct);
+        }
     }
 }

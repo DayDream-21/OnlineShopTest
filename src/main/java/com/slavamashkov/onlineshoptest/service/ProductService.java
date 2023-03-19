@@ -1,6 +1,7 @@
 package com.slavamashkov.onlineshoptest.service;
 
 import com.slavamashkov.onlineshoptest.entity.Product;
+import com.slavamashkov.onlineshoptest.entity.User;
 
 import java.util.List;
 
@@ -11,5 +12,7 @@ public interface ProductService {
 
      void saveProduct(Product product);
 
-     void deleteProduct(Product product);
+     //void deleteProduct(Product product);
+
+     void buyProduct(User user, Product product);
 }

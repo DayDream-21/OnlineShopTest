@@ -8,4 +8,6 @@ import java.util.Set;
 
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     Set<Purchase> getAllByUser(User user);
+    Purchase getPurchaseById(Long id);
+    void deletePurchaseById(Long id);
 }

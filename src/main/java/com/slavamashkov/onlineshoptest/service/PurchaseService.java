@@ -7,4 +7,6 @@ import java.util.Set;
 
 public interface PurchaseService {
     Set<Purchase> getAllPurchasesByUser(User user);
+    Purchase getPurchaseById(Long id);
+    void abortPurchase(Purchase purchase);
 }
