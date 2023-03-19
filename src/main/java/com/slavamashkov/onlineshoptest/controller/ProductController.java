@@ -110,14 +110,20 @@ public class ProductController {
             return "redirect:/";
         }
 
-        rating.setUser(user);
-        review.setUser(user);
+        Rating newRating = Rating.builder()
+                .score(rating.getScore())
+                .user(user)
+                .product(product)
+                .build();
 
-        rating.setProduct(product);
-        review.setProduct(product);
+        Review newReview = Review.builder()
+                .comment(review.getComment())
+                .user(user)
+                .product(product)
+                .build();
 
-        ratingRepository.save(rating);
-        reviewRepository.save(review);
+        ratingRepository.save(newRating);
+        reviewRepository.save(newReview);
 
         return "redirect:/";
     }

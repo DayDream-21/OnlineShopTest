@@ -62,6 +62,7 @@
     <tr>
       <th>name</th>
       <th>price</th>
+      <th>rating</th>
       <th>quantity</th>
       <th>action</th>
     </tr>
@@ -70,6 +71,7 @@
     <tr th:each="product : ${products}">
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
+      <th th:text="${ratings.get(product)}"></th>
       <td th:text="${product.quantity}"></td>
 
       <td>

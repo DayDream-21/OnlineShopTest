@@ -1,5 +1,7 @@
 package com.slavamashkov.onlineshoptest.controller;
 
+import com.slavamashkov.onlineshoptest.entity.Product;
+import com.slavamashkov.onlineshoptest.entity.Rating;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.PurchaseService;
@@ -11,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,8 +29,23 @@ public class HomeController {
     public String openHomePage(Model model, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName());
 
+
+        List<Product> allProducts = productService.getAllProducts();
+        Map<Product, Double> avgRatings = allProducts.stream().collect(Collectors.toMap(product -> product, product -> {
+            List<Rating> ratings = product.getRatings();
+            if (ratings.isEmpty()) {
+                return 0.0;
+            }
+
+            return ratings.stream()
+                    .mapToDouble(Rating::getScore)
+                    .average()
+                    .getAsDouble();
+        }));
+
+        model.addAttribute("ratings", avgRatings);
         model.addAttribute("balance", user.getBalance());
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", allProducts);
 
         return "home";
     }
