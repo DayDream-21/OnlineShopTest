@@ -21,7 +21,7 @@ public class ProductController {
     private final UserService userService;
 
     @GetMapping("/info/{id}")
-    public String editProduct(@PathVariable(name = "id") Long id, Model model) {
+    public String openInfoProductPage(@PathVariable(name = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
 
         model.addAttribute("product", product);
@@ -62,9 +62,25 @@ public class ProductController {
         return "add-product";
     }
 
+    @GetMapping("/update/{id}")
+    public String openUpdateProductPage(@PathVariable(name = "id") Long id, Model model) {
+        Product product = productService.getProductById(id);
+
+        model.addAttribute("product", product);
+
+        return "add-product";
+    }
+
     @PostMapping("/add")
     public String addNewProduct(@ModelAttribute(name = "product") Product product) {
         productService.saveProduct(product);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/delete")
+    public String deleteProduct(@ModelAttribute(name = "product") Product product) {
+        productService.deleteProduct(product);
 
         return "redirect:/";
     }

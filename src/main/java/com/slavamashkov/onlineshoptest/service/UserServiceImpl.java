@@ -40,6 +40,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getUserByEmail(userDto.getEmail());
 
         if (user != null) {
+            user.setBalance(userDto.getBalance());
+            user.setEnabled(userDto.isEnabled());
+
             userRepository.save(user);
         } else {
             Role role = roleRepository.findByName("ROLE_USER");
@@ -55,6 +58,11 @@ public class UserServiceImpl implements UserService {
 
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
     }
 
     @Override

@@ -7,6 +7,27 @@
   <title>Purchase history</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{'/'}">Online shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- Проверяем, авторизован ли пользователь, и отображаем соответствующие кнопки -->
+        <li class="nav-item">
+          <form class="nav-link" sec:authorize="isAuthenticated()" th:action="@{/logout}"
+                method="POST">
+            <button type="submit" class="btn btn-link">Log out</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <form>
   <h3>Purchases</h3>
   <table>
