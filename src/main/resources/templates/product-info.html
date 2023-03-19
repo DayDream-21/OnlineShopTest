@@ -29,6 +29,14 @@
       <label>Quantity:</label>
       <span th:text="${product.quantity}" class="form-control-static"></span>
     </div>
+    <div class="form-group">
+      <label>Rating:</label>
+      <span th:text="${rating}" class="form-control-static"></span>
+    </div>
+    <label>Reviews:</label>
+    <div class="form-group" th:each="review : ${reviews}">
+      <span th:text="${review.comment}" class="form-control-static"></span>
+    </div>
   </form>
 </div>
 <!-- Подключаем Bootstrap JS -->

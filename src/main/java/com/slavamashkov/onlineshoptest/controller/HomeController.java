@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 @Controller
@@ -28,7 +27,6 @@ public class HomeController {
     @GetMapping()
     public String openHomePage(Model model, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName());
-
 
         List<Product> allProducts = productService.getAllProducts();
         Map<Product, Double> avgRatings = allProducts.stream().collect(Collectors.toMap(product -> product, product -> {

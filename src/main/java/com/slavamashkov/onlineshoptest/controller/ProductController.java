@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,16 @@ public class ProductController {
     public String openInfoProductPage(@PathVariable(name = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
 
+        Double rating = product.getRatings().stream()
+                .mapToDouble(Rating::getScore)
+                .average()
+                .orElse(0.0);
+
+        List<Review> reviews = product.getReviews();
+
         model.addAttribute("product", product);
+        model.addAttribute("rating", rating);
+        model.addAttribute("reviews", reviews);
 
         return "product-info";
     }
