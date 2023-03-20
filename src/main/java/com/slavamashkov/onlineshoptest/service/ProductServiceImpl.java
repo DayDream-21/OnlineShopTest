@@ -51,4 +51,9 @@ public class ProductServiceImpl implements ProductService {
             user.getPurchaseHistory().add(purchase);
         }
     }
+
+    @Override
+    public Map<Product, Double> getProductPriceWithSales() {
+        return null;
+    }
 }

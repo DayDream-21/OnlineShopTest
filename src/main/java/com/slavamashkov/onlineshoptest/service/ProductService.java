@@ -16,4 +16,6 @@ public interface ProductService {
      //void deleteProduct(Product product);
 
      void buyProduct(User user, Product product);
+
+     Map<Product, Double> getProductPriceWithSales();
 }

@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setBalance(userDto.getBalance());
             user.setEnabled(userDto.isEnabled());
+            user.setNotifications(userDto.getNotifications());
         } else {
             Role role = roleRepository.findByName("ROLE_USER");
 

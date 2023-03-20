@@ -1,9 +1,8 @@
 package com.slavamashkov.onlineshoptest.controller;
 
-import com.slavamashkov.onlineshoptest.entity.Product;
-import com.slavamashkov.onlineshoptest.entity.Rating;
-import com.slavamashkov.onlineshoptest.entity.Tag;
-import com.slavamashkov.onlineshoptest.entity.User;
+import com.slavamashkov.onlineshoptest.entity.*;
+import com.slavamashkov.onlineshoptest.repository.UserRepository;
+import com.slavamashkov.onlineshoptest.service.NotificationService;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.PurchaseService;
 import com.slavamashkov.onlineshoptest.service.UserService;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +26,8 @@ public class HomeController {
     private final ProductService productService;
     private final UserService userService;
     private final PurchaseService purchaseService;
+    private final NotificationService notificationService;
+    private final UserRepository userRepository;
 
     @GetMapping()
     public String openHomePage(Model model, Authentication authentication) {
@@ -63,6 +66,45 @@ public class HomeController {
         model.addAttribute("purchases", purchaseService.getAllPurchasesByUser(user));
 
         return "purchase-history";
+    }
+
+    @GetMapping("/notifications")
+    public String openSendNotificationPage(Model model) {
+        Notification notification = new Notification();
+        List<User> allUsers = userService.getAllUsers();
+
+        model.addAttribute("notification", notification);
+        model.addAttribute("allUsers", allUsers);
+
+        return "send-notification";
+    }
+
+    @GetMapping("/notifications/inspect")
+    public String openSendNotificationPage(Authentication authentication, Model model) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Set<Notification> notifications = notificationService.getNotificationsByUser(user);
+
+        model.addAttribute("notifications", notifications);
+
+        return "notifications";
+    }
+
+    @PostMapping("/notification/send")
+    public String sendNotification(
+            @ModelAttribute(name = "notification") Notification notification,
+            @RequestParam("users") List<Long> userIds
+    ) {
+        List<User> users = userRepository.findAllById(userIds);
+
+        notification.setUsers(new HashSet<>(users));
+        notification.setDateTime(LocalDateTime.now());
+
+        notificationService.save(notification);
+
+        users.forEach(user -> user.getNotifications().add(notification));
+        users.forEach(userService::save);
+
+        return "redirect:/";
     }
 
     @GetMapping("/users")
