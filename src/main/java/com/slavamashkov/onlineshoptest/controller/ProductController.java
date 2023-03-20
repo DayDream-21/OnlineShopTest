@@ -3,8 +3,10 @@ package com.slavamashkov.onlineshoptest.controller;
 import com.slavamashkov.onlineshoptest.entity.*;
 import com.slavamashkov.onlineshoptest.repository.RatingRepository;
 import com.slavamashkov.onlineshoptest.repository.ReviewRepository;
+import com.slavamashkov.onlineshoptest.repository.TagRepository;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.PurchaseService;
+import com.slavamashkov.onlineshoptest.service.TagService;
 import com.slavamashkov.onlineshoptest.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +28,8 @@ public class ProductController {
     private final PurchaseService purchaseService;
     private final RatingRepository ratingRepository;
     private final ReviewRepository reviewRepository;
+    private final TagService tagService;
+    private final TagRepository tagRepository;
 
     @GetMapping("/info/{id}")
     public String openInfoProductPage(@PathVariable(name = "id") Long id, Model model) {
@@ -64,15 +69,6 @@ public class ProductController {
         purchaseService.abortPurchase(purchase);
 
         return "redirect:/history";
-    }
-
-    @GetMapping("/add")
-    public String openAddProductPage(Model model) {
-        Product emptyProduct = new Product();
-
-        model.addAttribute("product", emptyProduct);
-
-        return "add-product";
     }
 
     @GetMapping("/rate")
@@ -138,17 +134,35 @@ public class ProductController {
         return "redirect:/";
     }
 
+    @GetMapping("/add")
+    public String openAddProductPage(Model model) {
+        Product emptyProduct = new Product();
+
+        model.addAttribute("product", emptyProduct);
+
+        return "add-product";
+    }
+
     @GetMapping("/update/{id}")
     public String openUpdateProductPage(@PathVariable(name = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
+        List<Tag> allTags = tagService.findAllTags();
 
+        model.addAttribute("allTags", allTags);
         model.addAttribute("product", product);
 
         return "add-product";
     }
 
     @PostMapping("/add")
-    public String addNewProduct(@ModelAttribute(name = "product") Product product) {
+    public String addNewProduct(
+            @ModelAttribute(name = "product") Product product,
+            @RequestParam("tags") List<Long> tagsIds
+    ) {
+        List<Tag> tags = tagRepository.findAllById(tagsIds);
+
+        product.setTags(new HashSet<>(tags));
+
         productService.saveProduct(product);
 
         return "redirect:/";

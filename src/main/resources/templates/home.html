@@ -41,6 +41,12 @@
             <button type="submit" class="btn btn-link">List of users</button>
           </form>
         </li>
+        <li class="nav-item">
+          <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"
+                th:action="@{/tag/add}" method="GET">
+            <button type="submit" class="btn btn-link">Add tag</button>
+          </form>
+        </li>
       </ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <!-- Проверяем, авторизован ли пользователь, и отображаем соответствующие кнопки -->
@@ -61,6 +67,7 @@
     <thead>
     <tr>
       <th>name</th>
+      <th>tags</th>
       <th>price</th>
       <th>rating</th>
       <th>quantity</th>
@@ -70,6 +77,7 @@
     <tbody>
     <tr th:each="product : ${products}">
       <td th:text="${product.name}"></td>
+      <td th:text="${tags.get(product)}"></td>
       <td th:text="${product.price}"></td>
       <th th:text="${ratings.get(product)}"></th>
       <td th:text="${product.quantity}"></td>

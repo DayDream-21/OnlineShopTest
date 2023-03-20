@@ -4,6 +4,7 @@ import com.slavamashkov.onlineshoptest.entity.Product;
 import com.slavamashkov.onlineshoptest.entity.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
      List<Product> getAllProducts();

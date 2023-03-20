@@ -42,8 +42,6 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setBalance(userDto.getBalance());
             user.setEnabled(userDto.isEnabled());
-
-            userRepository.save(user);
         } else {
             Role role = roleRepository.findByName("ROLE_USER");
 
@@ -55,9 +53,9 @@ public class UserServiceImpl implements UserService {
                     .enabled(true)
                     .roles(Set.of(role))
                     .build();
-
-            userRepository.save(user);
         }
+
+        userRepository.save(user);
     }
 
     @Override
