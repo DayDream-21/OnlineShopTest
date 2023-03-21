@@ -4,6 +4,7 @@ import com.slavamashkov.onlineshoptest.entity.Product;
 import com.slavamashkov.onlineshoptest.entity.Purchase;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.repository.ProductRepository;
+import com.slavamashkov.onlineshoptest.repository.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final PurchaseRepository purchaseRepository;
 
     @Override
     public List<Product> getAllProducts() {
@@ -49,6 +51,8 @@ public class ProductServiceImpl implements ProductService {
             purchase.setPurchaseTime(LocalDateTime.now());
 
             user.getPurchaseHistory().add(purchase);
+
+            purchaseRepository.save(purchase);
         }
     }
 

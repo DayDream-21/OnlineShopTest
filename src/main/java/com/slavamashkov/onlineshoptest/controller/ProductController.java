@@ -54,6 +54,9 @@ public class ProductController {
         User user = userService.getUserByUsername(authentication.getName());
         Product product = productService.getProductById(id);
 
+        System.out.println(user);
+        System.out.println(product);
+
         productService.buyProduct(user, product);
 
         userService.save(user);
@@ -159,11 +162,12 @@ public class ProductController {
     @PostMapping("/add")
     public String addNewProduct(
             @ModelAttribute(name = "product") Product product,
-            @RequestParam("tags") List<Long> tagsIds
+            @RequestParam(value = "tags",required = false) List<Long> tagsIds
     ) {
-        List<Tag> tags = tagRepository.findAllById(tagsIds);
-
-        product.setTags(new HashSet<>(tags));
+        if (tagsIds != null) {
+            List<Tag> tags = tagRepository.findAllById(tagsIds);
+            product.setTags(new HashSet<>(tags));
+        }
 
         productService.saveProduct(product);
 

@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  server:
+    build: .
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres-shop-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-shop-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  postgres-shop-db:
+    image: 'postgres:15'
+    container_name: 'docker-shop-app'
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_ROOT_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust

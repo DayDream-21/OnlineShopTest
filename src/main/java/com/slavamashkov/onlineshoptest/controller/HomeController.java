@@ -122,8 +122,10 @@ public class HomeController {
         return "edit-user";
     }
 
-    @GetMapping("/users/delete")
-    public String deleteUser(@ModelAttribute(name = "user") User user) {
+    @GetMapping("/users/{id}/delete")
+    public String deleteUser(@PathVariable(name = "id") Long id) {
+        User user = userService.getUserById(id);
+
         userService.delete(user);
 
         return "redirect:/users";
