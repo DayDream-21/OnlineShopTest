@@ -54,13 +54,13 @@
 
       <td>
         <div sec:authorize="hasRole('ADMIN')">
-          <a th:href="@{'/users/user/' + ${user.id} + '/edit'}" class="btn btn-sm btn-primary" th:text="Edit"></a>
+          <a th:href="@{'/users/' + ${user.id} + '/edit'}" class="btn btn-sm btn-primary" th:text="Edit"></a>
         </div>
         <div sec:authorize="hasRole('ADMIN')">
-          <a th:href="@{'/users/user/' + ${user.id} + '/history'}" class="btn btn-sm btn-info" th:text="History"></a>
+          <a th:href="@{'/users/' + ${user.id} + '/history'}" class="btn btn-sm btn-primary" th:text="History"></a>
         </div>
         <div sec:authorize="hasRole('ADMIN')">
-          <a th:href="@{'/users/user/' + ${user.id} + '/delete'}" class="btn btn-sm btn-danger"
+          <a th:href="@{'/users/' + ${user.id} + '/delete'}" class="btn btn-sm btn-danger"
              th:text="Delete"></a>
         </div>
       </td>

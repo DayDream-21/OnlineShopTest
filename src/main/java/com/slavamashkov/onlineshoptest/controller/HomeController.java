@@ -32,21 +32,9 @@ public class HomeController {
     @GetMapping()
     public String openHomePage(Model model, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName());
-
-        // getAllProductsWithSales
         List<Product> allProducts = productService.getAllProducts();
-        Map<Product, Double> avgRatings = allProducts.stream()
-                .collect(Collectors.toMap(product -> product, product -> {
-            List<Rating> ratings = product.getRatings();
-            if (ratings.isEmpty()) {
-                return 0.0;
-            }
 
-            return ratings.stream()
-                    .mapToDouble(Rating::getScore)
-                    .average()
-                    .getAsDouble();
-        }));
+        Map<Product, Double> avgRatings = getProductAvgRatingMap(allProducts);
 
         Map<Product, Set<Tag>> tags = allProducts.stream()
                 .collect(Collectors.toMap(product -> product, Product::getTags));
@@ -116,7 +104,7 @@ public class HomeController {
         return "users";
     }
 
-    @GetMapping("/users/user/{id}/history")
+    @GetMapping("/users/{id}/history")
     public String openUserHistoryPage(@PathVariable(name = "id") Long id, Model model) {
         User user = userService.getUserById(id);
 
@@ -125,7 +113,7 @@ public class HomeController {
         return "purchase-history";
     }
 
-    @GetMapping("/users/user/{id}/edit")
+    @GetMapping("/users/{id}/edit")
     public String openUserEditPage(@PathVariable(name = "id") Long id, Model model) {
         User user = userService.getUserById(id);
 
@@ -134,17 +122,32 @@ public class HomeController {
         return "edit-user";
     }
 
-    @GetMapping("/users/user/delete")
+    @GetMapping("/users/delete")
     public String deleteUser(@ModelAttribute(name = "user") User user) {
         userService.delete(user);
 
         return "redirect:/users";
     }
 
-    @PostMapping("/users/user/add")
+    @PostMapping("/users/add")
     public String addUser(@ModelAttribute(name = "user") User user) {
         userService.save(user);
 
         return "redirect:/users";
+    }
+
+    private static Map<Product, Double> getProductAvgRatingMap(List<Product> allProducts) {
+        return allProducts.stream()
+                .collect(Collectors.toMap(product -> product, product -> {
+                    List<Rating> ratings = product.getRatings();
+                    if (ratings.isEmpty()) {
+                        return 0.0;
+                    }
+
+                    return ratings.stream()
+                            .mapToDouble(Rating::getScore)
+                            .average()
+                            .orElse(0.0);
+                }));
     }
 }

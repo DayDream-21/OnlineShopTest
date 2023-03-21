@@ -27,7 +27,7 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_roles",
+            name = "user_role",
             schema = "online_shop_schema",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
@@ -36,7 +36,7 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_notifications",
+            name = "user_notification",
             schema = "online_shop_schema",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "notification_id")

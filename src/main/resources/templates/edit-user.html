@@ -10,7 +10,7 @@
 <body>
 <div class="container">
   <h3>Edit user</h3>
-  <form th:action="@{/users/user/add}" th:object="${user}" method="POST" class="mb-5">
+  <form th:action="@{/users/add}" th:object="${user}" method="POST" class="mb-5">
     <div class="input-group">
       <label>
         <input th:field="${user.id}" class="form-control" hidden>

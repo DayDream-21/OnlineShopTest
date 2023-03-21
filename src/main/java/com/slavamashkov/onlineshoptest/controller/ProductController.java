@@ -137,7 +137,9 @@ public class ProductController {
     @GetMapping("/add")
     public String openAddProductPage(Model model) {
         Product emptyProduct = new Product();
+        List<Tag> allTags = tagService.findAllTags();
 
+        model.addAttribute("allTags", allTags);
         model.addAttribute("product", emptyProduct);
 
         return "add-product";
