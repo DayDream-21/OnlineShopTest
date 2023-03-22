@@ -20,8 +20,8 @@
       <input type="text" id="text" name="text" th:field="${notification.text}" class="form-control"/>
     </div>
     <label for="users">Users:</label>
-    <select id="users" name="users" multiple>
-      <option th:each="user : ${allUsers}"
+    <select id="users" th:name="users" multiple>
+      <option th:each="user : ${users}"
               th:value="${user.id}"
               th:text="${user.username}">
       </option>

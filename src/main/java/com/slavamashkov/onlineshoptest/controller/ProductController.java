@@ -54,13 +54,10 @@ public class ProductController {
         User user = userService.getUserByUsername(authentication.getName());
         Product product = productService.getProductById(id);
 
-        System.out.println(user);
-        System.out.println(product);
-
         productService.buyProduct(user, product);
 
         userService.save(user);
-        productService.saveProduct(product);
+        productService.save(product);
 
         return "redirect:/";
     }
@@ -85,7 +82,10 @@ public class ProductController {
     }
 
     @GetMapping("/rate/{id}")
-    public String openRateSingleProductPage(@PathVariable(name = "id") Long id, Model model, Authentication authentication) {
+    public String openRateSingleProductPage(
+            @PathVariable(name = "id") Long id,
+            Model model,
+            Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName());
         Product product = productService.getProductById(id);
 
@@ -140,7 +140,7 @@ public class ProductController {
     @GetMapping("/add")
     public String openAddProductPage(Model model) {
         Product emptyProduct = new Product();
-        List<Tag> allTags = tagService.findAllTags();
+        List<Tag> allTags = tagService.getAllTags();
 
         model.addAttribute("allTags", allTags);
         model.addAttribute("product", emptyProduct);
@@ -151,7 +151,7 @@ public class ProductController {
     @GetMapping("/update/{id}")
     public String openUpdateProductPage(@PathVariable(name = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
-        List<Tag> allTags = tagService.findAllTags();
+        List<Tag> allTags = tagService.getAllTags();
 
         model.addAttribute("allTags", allTags);
         model.addAttribute("product", product);
@@ -162,14 +162,14 @@ public class ProductController {
     @PostMapping("/add")
     public String addNewProduct(
             @ModelAttribute(name = "product") Product product,
-            @RequestParam(value = "tags",required = false) List<Long> tagsIds
+            @RequestParam(value = "tags", required = false) List<Long> tagsID
     ) {
-        if (tagsIds != null) {
-            List<Tag> tags = tagRepository.findAllById(tagsIds);
+        if (tagsID != null) {
+            List<Tag> tags = tagRepository.findAllById(tagsID);
             product.setTags(new HashSet<>(tags));
         }
 
-        productService.saveProduct(product);
+        productService.save(product);
 
         return "redirect:/";
     }

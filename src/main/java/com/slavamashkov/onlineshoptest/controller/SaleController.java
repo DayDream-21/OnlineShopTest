@@ -3,33 +3,29 @@ package com.slavamashkov.onlineshoptest.controller;
 import com.slavamashkov.onlineshoptest.entity.Product;
 import com.slavamashkov.onlineshoptest.entity.Sale;
 import com.slavamashkov.onlineshoptest.entity.Tag;
-import com.slavamashkov.onlineshoptest.repository.SaleRepository;
 import com.slavamashkov.onlineshoptest.service.ProductService;
+import com.slavamashkov.onlineshoptest.service.SaleService;
+import com.slavamashkov.onlineshoptest.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/sale")
 public class SaleController {
     private final ProductService productService;
-    private final SaleRepository saleRepository;
+    private final TagService tagService;
+    private final SaleService saleService;
 
     @GetMapping("/add")
     public String openAddSalePage(Model model) {
         Sale sale = new Sale();
         List<Product> products = productService.getAllProducts();
-        Map<Product, Set<Tag>> tags = products.stream().collect(Collectors.toMap(product -> product, Product::getTags));
+        List<Tag> tags = tagService.getAllTags();
 
         model.addAttribute("sale", sale);
         model.addAttribute("products", products);
@@ -39,8 +35,35 @@ public class SaleController {
     }
 
     @PostMapping("/add")
-    public String addSale(@ModelAttribute(name = "sale") Sale sale) {
-        saleRepository.save(sale);
+    public String addSale(
+            @RequestParam(value = "tags", required = false) List<Long> tagsID,
+            @RequestParam(value = "products", required = false) List<Long> productsID,
+            @ModelAttribute(name = "sale") Sale sale
+    ) {
+        Set<Product> allProductsByTags = new HashSet<>();
+        Set<Product> allProductsByIds = new HashSet<>();
+
+        if (tagsID != null) {
+            allProductsByTags.addAll(productService.getAllProductsByTags(tagService.getAllTagsByIds(tagsID)));
+        }
+
+        if (productsID != null) {
+            allProductsByIds.addAll(productService.getAllProductsByIds(productsID));
+        }
+
+        allProductsByIds.addAll(allProductsByTags);
+
+        sale.setProducts(allProductsByIds);
+
+        saleService.save(sale);
+
+        // При упрощении записи возникает ConcurrentModificationException
+        List<Product> productList = new ArrayList<>(allProductsByIds);
+        for (Iterator<Product> iterator = productList.iterator(); iterator.hasNext();) {
+            Product product = iterator.next();
+            product.getSales().add(sale);
+            productService.save(product);
+        }
 
         return "redirect:/";
     }

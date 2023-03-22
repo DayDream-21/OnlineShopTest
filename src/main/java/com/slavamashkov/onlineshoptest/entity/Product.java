@@ -25,7 +25,7 @@ public class Product {
     @Column(nullable = false) private Double price;
     @Column(nullable = false) private Integer quantity;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "product_sale",
             schema = "online_shop_schema",
@@ -43,7 +43,7 @@ public class Product {
     @ToString.Exclude
     private List<Rating> ratings;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "product_tag",
             schema = "online_shop_schema",

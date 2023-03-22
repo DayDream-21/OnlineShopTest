@@ -34,6 +34,20 @@ public class HomeController {
         User user = userService.getUserByUsername(authentication.getName());
         List<Product> allProducts = productService.getAllProducts();
 
+        List<Product> productsWithDiscount = allProducts.stream()
+                .peek(product -> {
+                    Set<Sale> sales = product.getSales();
+                    double maxDiscount = sales.stream()
+                            .filter(sale -> sale.getDate_from().isBefore(LocalDateTime.now())
+                                    && sale.getDate_to().isAfter(LocalDateTime.now()))
+                            .mapToDouble(Sale::getSaleAmount)
+                            .max()
+                            .orElse(0);
+                    double newPrice = product.getPrice() * (100 - maxDiscount) / 100;
+                    product.setPrice(newPrice);
+                })
+                .toList();
+
         Map<Product, Double> avgRatings = getProductAvgRatingMap(allProducts);
 
         Map<Product, Set<Tag>> tags = allProducts.stream()
@@ -41,7 +55,7 @@ public class HomeController {
 
         model.addAttribute("ratings", avgRatings);
         model.addAttribute("balance", user.getBalance());
-        model.addAttribute("products", allProducts);
+        model.addAttribute("products", productsWithDiscount);
         model.addAttribute("tags", tags);
 
         return "home";
@@ -56,33 +70,23 @@ public class HomeController {
         return "purchase-history";
     }
 
-    @GetMapping("/notifications")
+    @GetMapping("/notification")
     public String openSendNotificationPage(Model model) {
         Notification notification = new Notification();
-        List<User> allUsers = userService.getAllUsers();
+        List<User> users = userService.getAllUsers();
 
         model.addAttribute("notification", notification);
-        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("users", users);
 
-        return "send-notification";
-    }
-
-    @GetMapping("/notifications/inspect")
-    public String openSendNotificationPage(Authentication authentication, Model model) {
-        User user = userService.getUserByUsername(authentication.getName());
-        Set<Notification> notifications = notificationService.getNotificationsByUser(user);
-
-        model.addAttribute("notifications", notifications);
-
-        return "notifications";
+        return "notification";
     }
 
     @PostMapping("/notification/send")
     public String sendNotification(
             @ModelAttribute(name = "notification") Notification notification,
-            @RequestParam("users") List<Long> userIds
+            @RequestParam("users") List<Long> usersID
     ) {
-        List<User> users = userRepository.findAllById(userIds);
+        List<User> users = userRepository.findAllById(usersID);
 
         notification.setUsers(new HashSet<>(users));
         notification.setDateTime(LocalDateTime.now());
@@ -95,47 +99,14 @@ public class HomeController {
         return "redirect:/";
     }
 
-    @GetMapping("/users")
-    public String openUsersPage(Model model) {
-        List<User> allUsers = userService.getAllUsers();
+    @GetMapping("/notifications/inspect")
+    public String openSendNotificationPage(Authentication authentication, Model model) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Set<Notification> notifications = notificationService.getNotificationsByUser(user);
 
-        model.addAttribute("users", allUsers);
+        model.addAttribute("notifications", notifications);
 
-        return "users";
-    }
-
-    @GetMapping("/users/{id}/history")
-    public String openUserHistoryPage(@PathVariable(name = "id") Long id, Model model) {
-        User user = userService.getUserById(id);
-
-        model.addAttribute("purchases", purchaseService.getAllPurchasesByUser(user));
-
-        return "purchase-history";
-    }
-
-    @GetMapping("/users/{id}/edit")
-    public String openUserEditPage(@PathVariable(name = "id") Long id, Model model) {
-        User user = userService.getUserById(id);
-
-        model.addAttribute("user", user);
-
-        return "edit-user";
-    }
-
-    @GetMapping("/users/{id}/delete")
-    public String deleteUser(@PathVariable(name = "id") Long id) {
-        User user = userService.getUserById(id);
-
-        userService.delete(user);
-
-        return "redirect:/users";
-    }
-
-    @PostMapping("/users/add")
-    public String addUser(@ModelAttribute(name = "user") User user) {
-        userService.save(user);
-
-        return "redirect:/users";
+        return "notifications";
     }
 
     private static Map<Product, Double> getProductAvgRatingMap(List<Product> allProducts) {

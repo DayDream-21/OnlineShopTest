@@ -43,7 +43,7 @@
         </li>
         <li class="nav-item">
           <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"
-                th:action="@{/notifications}" method="GET">
+                th:action="@{/notification}" method="GET">
             <button type="submit" class="btn btn-link">Send notification</button>
           </form>
         </li>
@@ -57,6 +57,12 @@
           <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"
                 th:action="@{/tag/add}" method="GET">
             <button type="submit" class="btn btn-link">Add tag</button>
+          </form>
+        </li>
+        <li class="nav-item">
+          <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"
+                th:action="@{/sale/add}" method="GET">
+            <button type="submit" class="btn btn-link">Add sale</button>
           </form>
         </li>
       </ul>
@@ -110,7 +116,7 @@
       </td>
     </tr>
     <tr sec:authorize="hasRole('ADMIN')">
-      <td colspan="3">---</td>
+      <td colspan="5">---</td>
       <td>
         <a th:href="@{'/product/add'}" class="btn btn-primary btn-sm">Add</a>
       </td>

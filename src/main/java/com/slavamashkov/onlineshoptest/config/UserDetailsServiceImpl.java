@@ -1,6 +1,5 @@
-package com.slavamashkov.onlineshoptest.service;
+package com.slavamashkov.onlineshoptest.config;
 
-import com.slavamashkov.onlineshoptest.config.MyUserDetails;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

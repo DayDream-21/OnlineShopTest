@@ -21,10 +21,10 @@ public class Sale {
     private Long id;
 
     @Column(nullable = false) private Double saleAmount;
-    @Column(nullable = false) private LocalDateTime from;
-    @Column(nullable = false) private LocalDateTime to;
+    @Column(nullable = false) private LocalDateTime date_from;
+    @Column(nullable = false) private LocalDateTime date_to;
 
-    @ManyToMany(mappedBy = "sales")
+    @ManyToMany(mappedBy = "sales", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<Product> products;
 }

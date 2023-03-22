@@ -34,7 +34,7 @@
     </div>
 
     <label for="tags">Tags:</label>
-    <select id="tags" name="tags" multiple>
+    <select id="tags" th:name="tags" multiple>
       <option th:each="tag : ${allTags}"
               th:value="${tag.id}"
               th:text="${tag.name}">

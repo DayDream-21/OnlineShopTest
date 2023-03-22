@@ -1,9 +1,10 @@
-package com.slavamashkov.onlineshoptest.service;
+package com.slavamashkov.onlineshoptest.service.implementation;
 
 import com.slavamashkov.onlineshoptest.entity.Role;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.repository.RoleRepository;
 import com.slavamashkov.onlineshoptest.repository.UserRepository;
+import com.slavamashkov.onlineshoptest.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

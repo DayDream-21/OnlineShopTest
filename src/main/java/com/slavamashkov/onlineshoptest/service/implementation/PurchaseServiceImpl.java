@@ -1,10 +1,11 @@
-package com.slavamashkov.onlineshoptest.service;
+package com.slavamashkov.onlineshoptest.service.implementation;
 
 import com.slavamashkov.onlineshoptest.entity.Product;
 import com.slavamashkov.onlineshoptest.entity.Purchase;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.repository.ProductRepository;
 import com.slavamashkov.onlineshoptest.repository.PurchaseRepository;
+import com.slavamashkov.onlineshoptest.service.PurchaseService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
