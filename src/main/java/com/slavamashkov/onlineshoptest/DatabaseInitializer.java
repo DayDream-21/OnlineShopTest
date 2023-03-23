@@ -32,7 +32,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 INSERT INTO user_role (user_id, role_id)
                 VALUES
                     (1, 2),
-                    (2, 1);
+                    (2, 1),
+                    (3, 1);
 
                 INSERT INTO products (name, description, price, quantity)
                 VALUES

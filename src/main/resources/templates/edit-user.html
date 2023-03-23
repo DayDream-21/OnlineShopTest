@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Edit user</title>
@@ -8,6 +10,27 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{'/'}">Online shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- Проверяем, авторизован ли пользователь, и отображаем соответствующие кнопки -->
+        <li class="nav-item">
+          <form class="nav-link" sec:authorize="isAuthenticated()" th:action="@{/logout}"
+                method="POST">
+            <button type="submit" class="btn btn-link">Log out</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <div class="container">
   <h3>Edit user</h3>
   <form th:action="@{/users/add}" th:object="${user}" method="POST" class="mb-5">
