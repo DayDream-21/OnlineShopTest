@@ -16,8 +16,6 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         jdbcTemplate.execute("""
-                SET search_path = "online_shop_schema";
-
                 INSERT INTO roles (name)
                 VALUES
                     ('ROLE_USER'),

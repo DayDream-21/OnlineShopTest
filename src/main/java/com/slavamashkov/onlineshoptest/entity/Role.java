@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "roles", schema = "online_shop_schema")
+@Table(name = "roles")
 public class Role {
     @Id
     @Column(name = "role_id")

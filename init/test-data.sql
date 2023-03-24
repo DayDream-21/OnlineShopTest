@@ -1,4 +1,4 @@
-SET search_path = "online_shop_schema";
+
 
 INSERT INTO roles (name)
 VALUES

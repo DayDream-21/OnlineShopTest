@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "reviews", schema = "online_shop_schema")
+@Table(name = "reviews")
 public class Review {
     @Id
     @Column(name = "review_id")

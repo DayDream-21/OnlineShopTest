@@ -11,7 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tags", schema = "online_shop_schema")
+@Table(name = "tags")
 public class Tag {
     @Id
     @Column(name = "tag_id")

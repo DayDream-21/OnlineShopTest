@@ -12,7 +12,7 @@ import java.util.*;
 @ToString
 @Builder
 @Entity
-@Table(name = "users", schema = "online_shop_schema")
+@Table(name = "users")
 public class User {
     @Id
     @Column(name = "user_id")
@@ -28,7 +28,6 @@ public class User {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
-            schema = "online_shop_schema",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -37,7 +36,6 @@ public class User {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_notification",
-            schema = "online_shop_schema",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "notification_id")
     )

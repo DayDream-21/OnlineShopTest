@@ -12,7 +12,7 @@ import java.util.*;
 @ToString
 @Builder
 @Entity
-@Table(name = "organization", schema = "online_shop_schema")
+@Table(name = "organization")
 public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

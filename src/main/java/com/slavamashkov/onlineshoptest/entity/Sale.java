@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "sales", schema = "online_shop_schema")
+@Table(name = "sales")
 public class Sale {
     @Id
     @Column(name = "sale_id")

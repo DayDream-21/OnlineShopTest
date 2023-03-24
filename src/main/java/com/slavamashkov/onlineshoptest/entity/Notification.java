@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "notifications", schema = "online_shop_schema")
+@Table(name = "notifications")
 public class Notification {
     @Id
     @Column(name = "notification_id")

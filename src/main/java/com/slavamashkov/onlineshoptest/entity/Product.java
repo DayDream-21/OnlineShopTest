@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "products", schema = "online_shop_schema")
+@Table(name = "products")
 public class Product {
     @Id
     @Column(name = "product_id")
@@ -28,7 +28,6 @@ public class Product {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "product_sale",
-            schema = "online_shop_schema",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "sale_id")
     )
@@ -43,7 +42,6 @@ public class Product {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "product_tag",
-            schema = "online_shop_schema",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
