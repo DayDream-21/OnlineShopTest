@@ -67,7 +67,6 @@ public class OrganizationController {
             @PathVariable(name = "id") Long orgID
     ) {
         Organization organization = organizationService.getOrganizationById(orgID);
-
         model.addAttribute("organization", organization);
 
         return "add-organization";

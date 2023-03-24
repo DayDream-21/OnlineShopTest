@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getActiveProducts() {
-        return productRepository.findAllByActiveIsTrue();
+        return getActiveProductsFromActiveOrganizations(getAllProducts());
+    }
+
+    private List<Product> getActiveProductsFromActiveOrganizations(List<Product> products) {
+        return products.stream()
+                .filter(product -> product.isActive() &&
+                        (product.getOrganization() == null || product.getOrganization().isActive()))
+                .collect(Collectors.toList());
     }
 
     @Override

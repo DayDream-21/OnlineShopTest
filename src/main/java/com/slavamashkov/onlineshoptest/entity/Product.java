@@ -34,10 +34,10 @@ public class Product {
     )
     private Set<Sale> sales;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Rating> ratings;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -49,7 +49,7 @@ public class Product {
     )
     private Set<Tag> tags;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "organization_id")
     private Organization organization;
 

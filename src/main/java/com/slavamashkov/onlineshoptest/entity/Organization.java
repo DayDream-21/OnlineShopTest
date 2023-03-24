@@ -22,7 +22,7 @@ public class Organization {
     @Column(nullable = false) private String description;
     @Column(nullable = false) private boolean active;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
@@ -30,7 +30,7 @@ public class Organization {
     /*@Lob
     private byte[] logo;*/
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.PERSIST)
     @ToString.Exclude
     private List<Product> products = new ArrayList<>();
 }

@@ -50,9 +50,9 @@ public class DatabaseInitializer implements CommandLineRunner {
                 
                 INSERT INTO organization (active, description, name, user_id)
                 VALUES
-                    (true, 'user1_org1', 'user1_org1', 2),
-                    (true, 'user1_org2', 'user1_org2', 2),
-                    (false, 'user1_org3', 'user1_org3', 2);
+                    (true, 'user1_org1', 'user1_org1', 3),
+                    (true, 'user1_org2', 'user1_org2', 3),
+                    (false, 'user1_org3', 'user1_org3', 3);
                     
                 INSERT INTO products (name, description, price, quantity, active, organization_id)
                 VALUES

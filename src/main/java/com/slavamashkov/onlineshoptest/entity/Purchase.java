@@ -23,7 +23,7 @@ public class Purchase {
     @ToString.Exclude
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id")
     @ToString.Exclude
     private Product product;
