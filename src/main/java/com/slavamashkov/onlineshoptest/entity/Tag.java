@@ -7,7 +7,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,6 +21,10 @@ public class Tag {
     @Column(nullable = false, unique = true) private String name;
 
     @ManyToMany(mappedBy = "tags", cascade = CascadeType.REMOVE)
-    @ToString.Exclude
     private Set<Product> products;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

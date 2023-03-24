@@ -4,10 +4,7 @@ import com.slavamashkov.onlineshoptest.entity.*;
 import com.slavamashkov.onlineshoptest.repository.RatingRepository;
 import com.slavamashkov.onlineshoptest.repository.ReviewRepository;
 import com.slavamashkov.onlineshoptest.repository.TagRepository;
-import com.slavamashkov.onlineshoptest.service.ProductService;
-import com.slavamashkov.onlineshoptest.service.PurchaseService;
-import com.slavamashkov.onlineshoptest.service.TagService;
-import com.slavamashkov.onlineshoptest.service.UserService;
+import com.slavamashkov.onlineshoptest.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,9 +23,11 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
     private final PurchaseService purchaseService;
+    private final OrganizationService organizationService;
+    private final TagService tagService;
+
     private final RatingRepository ratingRepository;
     private final ReviewRepository reviewRepository;
-    private final TagService tagService;
     private final TagRepository tagRepository;
 
     @GetMapping("/info/{id}")
@@ -138,23 +137,38 @@ public class ProductController {
     }
 
     @GetMapping("/add")
-    public String openAddProductPage(Model model) {
+    public String openAddProductPage(
+            Model model,
+            Authentication authentication
+    ) {
+        User user = userService.getUserByUsername(authentication.getName());
         Product emptyProduct = new Product();
+
+        List<Organization> organizations = organizationService.getAllOrganizationsByUser(user);
         List<Tag> allTags = tagService.getAllTags();
 
         model.addAttribute("allTags", allTags);
         model.addAttribute("product", emptyProduct);
+        model.addAttribute("organizations", organizations);
 
         return "add-product";
     }
 
     @GetMapping("/update/{id}")
-    public String openUpdateProductPage(@PathVariable(name = "id") Long id, Model model) {
+    public String openUpdateProductPage(
+            @PathVariable(name = "id") Long id,
+            Model model,
+            Authentication authentication
+    ) {
+        User user = userService.getUserByUsername(authentication.getName());
         Product product = productService.getProductById(id);
+
+        List<Organization> organizations = organizationService.getAllOrganizationsByUser(user);
         List<Tag> allTags = tagService.getAllTags();
 
         model.addAttribute("allTags", allTags);
         model.addAttribute("product", product);
+        model.addAttribute("organizations", organizations);
 
         return "add-product";
     }
@@ -162,11 +176,17 @@ public class ProductController {
     @PostMapping("/add")
     public String addNewProduct(
             @ModelAttribute(name = "product") Product product,
-            @RequestParam(value = "tags", required = false) List<Long> tagsID
+            @RequestParam(value = "tags", required = false) List<Long> tagsID,
+            @RequestParam(value = "organization", required = false) Long orgID
     ) {
         if (tagsID != null) {
             List<Tag> tags = tagRepository.findAllById(tagsID);
             product.setTags(new HashSet<>(tags));
+        }
+
+        if (orgID != null) {
+            Organization organization = organizationService.getOrganizationById(orgID);
+            product.setOrganization(organization);
         }
 
         productService.save(product);

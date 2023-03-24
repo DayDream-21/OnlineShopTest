@@ -53,6 +53,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             // Удаляем покупку из списка покупок пользователя
             purchaseRepository.deletePurchaseById(purchase.getId());
         } else {
+            // Если, продукт купленный пользователем, был удален, то добавляем в базу, продукт из покупки
             Product newProduct = purchase.getProduct();
 
             newProduct.setQuantity(1);

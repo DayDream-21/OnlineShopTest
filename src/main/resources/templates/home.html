@@ -36,6 +36,18 @@
           </form>
         </li>
         <li class="nav-item">
+          <form class="nav-link" sec:authorize="hasRole('ADMIN') or hasRole('USER')"
+                th:action="@{/notifications/inspect}" method="GET">
+            <button type="submit" class="btn btn-link">Inspect notification</button>
+          </form>
+        </li>
+        <li class="nav-item">
+          <form class="nav-link" sec:authorize="hasRole('ADMIN') or hasRole('USER')"
+                th:action="@{/organization}" method="GET">
+            <button type="submit" class="btn btn-link">Organization panel</button>
+          </form>
+        </li>
+        <li class="nav-item">
           <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"
                 th:action="@{/users}" method="GET">
             <button type="submit" class="btn btn-link">List of users</button>
@@ -45,12 +57,6 @@
           <form class="nav-link" sec:authorize="hasRole('ADMIN') and !hasRole('USER')"
                 th:action="@{/notification}" method="GET">
             <button type="submit" class="btn btn-link">Send notification</button>
-          </form>
-        </li>
-        <li class="nav-item">
-          <form class="nav-link" sec:authorize="hasRole('ADMIN') or hasRole('USER')"
-                th:action="@{/notifications/inspect}" method="GET">
-            <button type="submit" class="btn btn-link">Inspect notification</button>
           </form>
         </li>
         <li class="nav-item">

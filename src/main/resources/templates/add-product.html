@@ -64,14 +64,13 @@
       </option>
     </select>
 
-    <!-- для скидок
-    <label for="tags">Tags:</label>
-    <select id="tags" name="tags" multiple>
-      <option th:each="tag : ${allTags}"
-              th:value="${tag.id}"
-              th:text="${tag.name}"
-              th:selected="${product.tags.contains(tag)}"></option>
-    </select>-->
+    <label for="organization">Organization:</label>
+    <select id="organization" th:name="organization">
+      <option th:each="organization : ${organizations}"
+              th:value="${organization.id}"
+              th:text="${organization.name}">
+      </option>
+    </select>
 
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Done</button>

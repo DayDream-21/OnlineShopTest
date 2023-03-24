@@ -8,7 +8,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -32,15 +31,12 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "sale_id")
     )
-    @ToString.Exclude
     private Set<Sale> sales;
 
     @OneToMany(mappedBy = "product")
-    @ToString.Exclude
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "product")
-    @ToString.Exclude
     private List<Rating> ratings;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -50,8 +46,18 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    @ToString.Exclude
     private Set<Tag> tags;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
+    @Override
+    public String toString() {
+        return "Name: " + name + "\n" +
+                "Description: " + description + "\n" +
+                "Price: " + price;
+    }
 }
 
 
