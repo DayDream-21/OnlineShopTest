@@ -23,6 +23,7 @@ public class Product {
     @Column(nullable = true) private String description;
     @Column(nullable = false) private Double price;
     @Column(nullable = false) private Integer quantity;
+    @Column(nullable = false) private boolean active;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

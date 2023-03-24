@@ -44,7 +44,7 @@ public class SaleController {
         Set<Product> allProductsByIds = new HashSet<>();
 
         if (tagsID != null) {
-            allProductsByTags.addAll(productService.getAllProductsByTags(tagService.getAllTagsByIds(tagsID)));
+            allProductsByTags.addAll(productService.getAllProductsByTags(new HashSet<>(tagService.getAllTagsByIds(tagsID))));
         }
 
         if (productsID != null) {

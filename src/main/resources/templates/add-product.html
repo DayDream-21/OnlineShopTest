@@ -55,6 +55,11 @@
       <label for="quantity">Quantity:</label>
       <input type="number" id="quantity" name="quantity" th:field="${product.quantity}" class="form-control"/>
     </div>
+    <div class="input-group" sec:authorize="hasRole('ADMIN')">
+      <label for="active">Active:</label>
+      <input type="text" id="active" name="active" th:field="${product.active}"
+             class="form-control" th:default="false"/>
+    </div>
 
     <label for="tags">Tags:</label>
     <select id="tags" th:name="tags" multiple>
@@ -63,14 +68,23 @@
               th:text="${tag.name}">
       </option>
     </select>
+    <div>
+      <label for="organization">Organization:</label>
+      <select id="organization" th:name="organization">
+        <option th:each="organization : ${organizations}"
+                th:value="${organization.id}"
+                th:text="${organization.name}">
+        </option>
+      </select>
+    </div>
+    <div>
+      <div class="input-group">
+        <label>
+          <input th:field="${product.organization}" class="form-control" hidden>
+        </label>
+      </div>
+    </div>
 
-    <label for="organization">Organization:</label>
-    <select id="organization" th:name="organization">
-      <option th:each="organization : ${organizations}"
-              th:value="${organization.id}"
-              th:text="${organization.name}">
-      </option>
-    </select>
 
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Done</button>

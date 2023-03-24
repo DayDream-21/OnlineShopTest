@@ -32,9 +32,10 @@ public class HomeController {
     @GetMapping()
     public String openHomePage(Model model, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName());
-        List<Product> allProducts = productService.getAllProducts();
+        List<Product> activeProducts = productService.getActiveProducts();
+        List<Product> inactiveProducts = productService.getUnactiveProducts();
 
-        List<Product> productsWithDiscount = allProducts.stream()
+        List<Product> productsWithDiscount = activeProducts.stream()
                 .peek(product -> {
                     Set<Sale> sales = product.getSales();
                     double maxDiscount = sales.stream()
@@ -48,14 +49,16 @@ public class HomeController {
                 })
                 .toList();
 
-        Map<Product, Double> avgRatings = getProductAvgRatingMap(allProducts);
 
-        Map<Product, Set<Tag>> tags = allProducts.stream()
+        Map<Product, Double> avgRatings = getProductAvgRatingMap(activeProducts);
+
+        Map<Product, Set<Tag>> tags = activeProducts.stream()
                 .collect(Collectors.toMap(product -> product, Product::getTags));
 
         model.addAttribute("ratings", avgRatings);
         model.addAttribute("balance", user.getBalance());
-        model.addAttribute("products", productsWithDiscount);
+        model.addAttribute("activeProducts", productsWithDiscount);
+        model.addAttribute("inactiveProducts", inactiveProducts);
         model.addAttribute("tags", tags);
 
         return "home";

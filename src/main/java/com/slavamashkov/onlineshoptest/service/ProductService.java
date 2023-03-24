@@ -10,6 +10,10 @@ import java.util.Set;
 public interface ProductService {
      List<Product> getAllProducts();
 
+     List<Product> getActiveProducts();
+
+     List<Product> getUnactiveProducts();
+
      Product getProductById(Long id);
 
      Set<Product> getAllProductsByTags(Set<Tag> tags);

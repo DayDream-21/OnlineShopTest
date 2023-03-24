@@ -1,9 +1,13 @@
 package com.slavamashkov.onlineshoptest.controller;
 
 import com.slavamashkov.onlineshoptest.entity.Organization;
+import com.slavamashkov.onlineshoptest.entity.Product;
+import com.slavamashkov.onlineshoptest.entity.Tag;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.repository.RoleRepository;
 import com.slavamashkov.onlineshoptest.service.OrganizationService;
+import com.slavamashkov.onlineshoptest.service.ProductService;
+import com.slavamashkov.onlineshoptest.service.TagService;
 import com.slavamashkov.onlineshoptest.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -20,6 +24,8 @@ public class OrganizationController {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final RoleRepository roleRepository;
+    private final TagService tagService;
+    private final ProductService productService;
 
     @GetMapping
     public String openOrganizationsPage(
@@ -78,6 +84,44 @@ public class OrganizationController {
         organizationService.save(organization);
 
         return "redirect:/organization";
+    }
+
+    @GetMapping("/addProduct")
+    public String openAddProductFromOrganizationPage(
+            Model model,
+            Authentication authentication
+    ) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Product emptyProduct = new Product();
+
+        List<Organization> organizations = organizationService.getAllOrganizationsByUserAndActiveIsTrue(user);
+        List<Tag> allTags = tagService.getAllTags();
+
+        model.addAttribute("allTags", allTags);
+        model.addAttribute("product", emptyProduct);
+        model.addAttribute("organizations", organizations);
+
+        return "add-product";
+
+    }
+
+    @GetMapping("/updateProduct/{id}")
+    public String openEditProductFromOrganizationPage(
+            @PathVariable(name = "id") Long productID,
+            Model model,
+            Authentication authentication
+    ) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Product product = productService.getProductById(productID);
+
+        List<Organization> organizations = organizationService.getAllOrganizationsByUserAndActiveIsTrue(user);
+        List<Tag> allTags = tagService.getAllTags();
+
+        model.addAttribute("allTags", allTags);
+        model.addAttribute("product", product);
+        model.addAttribute("organizations", organizations);
+
+        return "add-product";
     }
 
     /*@GetMapping("/image/{id}")

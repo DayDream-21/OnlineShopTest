@@ -5,6 +5,7 @@ import com.slavamashkov.onlineshoptest.entity.Purchase;
 import com.slavamashkov.onlineshoptest.entity.User;
 import com.slavamashkov.onlineshoptest.repository.ProductRepository;
 import com.slavamashkov.onlineshoptest.repository.PurchaseRepository;
+import com.slavamashkov.onlineshoptest.repository.UserRepository;
 import com.slavamashkov.onlineshoptest.service.PurchaseService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Set;
 public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Set<Purchase> getAllPurchasesByUser(User user) {
@@ -49,7 +51,19 @@ public class PurchaseServiceImpl implements PurchaseService {
             product.setQuantity(product.getQuantity() + 1);
             // Возвращаем пользователю деньги за покупку
             User user = purchase.getUser();
-            user.setBalance(user.getBalance() + product.getPrice());
+            user.setBalance(user.getBalance() + ProductServiceImpl.priceWithSale(product));
+
+            // Если продукт продавался от лица организации, к которой привязан пользователь,
+            // то продавец должен вернуть деньги обратно в полном объеме
+            if (product.getOrganization() != null) {
+                User seller = userRepository.getUserByOrganizations(product.getOrganization());
+
+                seller.setBalance(seller.getBalance() - ProductServiceImpl.priceWithSale(product) * 0.95);
+
+                userRepository.save(seller);
+            }
+
+
             // Удаляем покупку из списка покупок пользователя
             purchaseRepository.deletePurchaseById(purchase.getId());
         } else {

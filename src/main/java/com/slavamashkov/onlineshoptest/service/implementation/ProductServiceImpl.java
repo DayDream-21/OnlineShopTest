@@ -3,6 +3,7 @@ package com.slavamashkov.onlineshoptest.service.implementation;
 import com.slavamashkov.onlineshoptest.entity.*;
 import com.slavamashkov.onlineshoptest.repository.ProductRepository;
 import com.slavamashkov.onlineshoptest.repository.PurchaseRepository;
+import com.slavamashkov.onlineshoptest.repository.UserRepository;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,21 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final PurchaseRepository purchaseRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> getActiveProducts() {
+        return productRepository.findAllByActiveIsTrue();
+    }
+
+    @Override
+    public List<Product> getUnactiveProducts() {
+        return productRepository.findAllByActiveIsFalse();
     }
 
     @Override
@@ -45,8 +57,16 @@ public class ProductServiceImpl implements ProductService {
     public void buyProduct(User user, Product product) {
         if (user.getBalance() >= product.getPrice() && product.getQuantity() > 0) {
             product.setQuantity(product.getQuantity() - 1);
-            product.setPrice(priceWithSale(product));
-            user.setBalance(user.getBalance() - product.getPrice());
+            user.setBalance(user.getBalance() - priceWithSale(product));
+            // Если продукт продавался от лица организации, к которой привязан пользователь,
+            // то продавец должен получить прибыль за вычетом комиссии
+            if (product.getOrganization() != null) {
+                User seller = userRepository.getUserByOrganizations(product.getOrganization());
+
+                seller.setBalance(seller.getBalance() + priceWithSale(product) * 0.95);
+
+                userRepository.save(seller);
+            }
 
             Purchase purchase = new Purchase();
 
@@ -60,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private Double priceWithSale(Product product) {
+    public static Double priceWithSale(Product product) {
         Set<Sale> sales = product.getSales();
         double maxDiscount = sales.stream()
                 .filter(sale -> sale.getDate_from().isBefore(LocalDateTime.now())

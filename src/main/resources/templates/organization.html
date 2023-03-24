@@ -67,7 +67,7 @@
   </table>
   <div sec:authorize="hasRole('ADMIN') or hasRole('USER')">
     <a th:href="@{'/organization/request/' + ${user.id}}" class="btn btn-primary btn-sm">Create request</a>
-    <a th:href="@{'/organization/product/add'}" class="btn btn-primary btn-sm">Add product</a>
+    <a th:href="@{'/organization/addProduct'}" class="btn btn-primary btn-sm">Add product</a>
   </div>
 </div>
 

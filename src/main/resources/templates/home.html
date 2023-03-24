@@ -95,16 +95,41 @@
       <th>price</th>
       <th>rating</th>
       <th>quantity</th>
+      <th sec:authorize="hasRole('ADMIN')">active</th>
       <th>action</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product : ${products}">
+    <tr th:each="product : ${activeProducts}">
       <td th:text="${product.name}"></td>
       <td th:text="${tags.get(product)}"></td>
       <td th:text="${product.price}"></td>
       <th th:text="${ratings.get(product)}"></th>
       <td th:text="${product.quantity}"></td>
+      <td sec:authorize="hasRole('ADMIN')" th:text="${product.active}"></td>
+
+      <td>
+        <div sec:authorize="hasRole('USER') or hasRole('ADMIN')">
+          <a th:href="@{'/product/info/' + ${product.id}}" class="btn btn-primary btn-sm">Info</a>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{'/product/update/' + ${product.id}}" class="btn btn-primary btn-sm">Edit</a>
+        </div>
+        <div sec:authorize="hasRole('USER') or hasRole('ADMIN')">
+          <a th:href="@{'/product/buy/' + ${product.id}}" class="btn btn-primary btn-sm">Buy</a>
+        </div>
+        <!--<div sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{'/product/delete/' + ${product.id}}" class="btn btn-primary btn-danger">Delete</a>
+        </div>-->
+      </td>
+    </tr>
+    <tr sec:authorize="hasRole('ADMIN')" style="background-color:tomato" th:each="product : ${inactiveProducts}">
+      <td th:text="${product.name}"></td>
+      <td th:text="${tags.get(product)}"></td>
+      <td th:text="${product.price}"></td>
+      <th th:text="${ratings.get(product)}"></th>
+      <td th:text="${product.quantity}"></td>
+      <td sec:authorize="hasRole('ADMIN')" th:text="${product.active}"></td>
 
       <td>
         <div sec:authorize="hasRole('USER') or hasRole('ADMIN')">

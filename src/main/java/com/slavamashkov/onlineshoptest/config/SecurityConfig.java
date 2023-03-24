@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .requestMatchers("/").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/history").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/users/**").hasAnyRole("ADMIN")
-                .requestMatchers("/product/add").hasAnyRole("ADMIN")
+                .requestMatchers("/product/add").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/product/update/*").hasAnyRole("ADMIN")
                 .requestMatchers("/product/return/*").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/product/rate/*").hasAnyRole("USER", "ADMIN")
@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .requestMatchers("/tag/**").hasAnyRole("ADMIN")
                 .requestMatchers("/notification/send").hasAnyRole("ADMIN")
                 .requestMatchers("/notification/*").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/organization/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
         ).formLogin(form -> form
                 .loginPage("/login")
