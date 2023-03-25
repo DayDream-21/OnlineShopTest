@@ -5,6 +5,7 @@ import com.slavamashkov.onlineshoptest.repository.ProductRepository;
 import com.slavamashkov.onlineshoptest.repository.PurchaseRepository;
 import com.slavamashkov.onlineshoptest.repository.UserRepository;
 import com.slavamashkov.onlineshoptest.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).get();
+        return productRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such product with id: " + id));
     }
 
     @Override
@@ -61,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }*/
 
+    @Transactional
     @Override
     public void buyProduct(User user, Product product) {
         if (user.getBalance() >= product.getPrice() && product.getQuantity() > 0) {

@@ -6,6 +6,7 @@ import com.slavamashkov.onlineshoptest.entity.Tag;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.SaleService;
 import com.slavamashkov.onlineshoptest.service.TagService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,7 @@ public class SaleController {
         return "add-sale";
     }
 
+    @Transactional
     @PostMapping("/add")
     public String addSale(
             @RequestParam(value = "tags", required = false) List<Long> tagsID,

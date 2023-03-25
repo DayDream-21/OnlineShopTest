@@ -5,6 +5,7 @@ import com.slavamashkov.onlineshoptest.repository.RatingRepository;
 import com.slavamashkov.onlineshoptest.repository.ReviewRepository;
 import com.slavamashkov.onlineshoptest.repository.RoleRepository;
 import com.slavamashkov.onlineshoptest.service.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -101,6 +102,7 @@ public class ProductController {
         return "rate-single-product";
     }
 
+    @Transactional
     @PostMapping("/rate/{id}")
     public String rateProduct(
             @PathVariable(name = "id") Long id,
@@ -160,6 +162,7 @@ public class ProductController {
         return "add-product";
     }
 
+    @Transactional
     @PostMapping("/add")
     public String addUpdateProduct(
             Authentication authentication,

@@ -6,6 +6,7 @@ import com.slavamashkov.onlineshoptest.service.NotificationService;
 import com.slavamashkov.onlineshoptest.service.ProductService;
 import com.slavamashkov.onlineshoptest.service.PurchaseService;
 import com.slavamashkov.onlineshoptest.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -84,6 +85,7 @@ public class HomeController {
         return "notification";
     }
 
+    @Transactional
     @PostMapping("/notification/send")
     public String sendNotification(
             @ModelAttribute(name = "notification") Notification notification,

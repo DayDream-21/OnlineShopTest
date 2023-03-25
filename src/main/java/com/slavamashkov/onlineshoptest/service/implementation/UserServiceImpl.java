@@ -42,6 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such user with id: " + id));
     }
 }
